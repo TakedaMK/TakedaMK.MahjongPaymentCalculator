@@ -71,7 +71,7 @@ function updateRankInputs() {
         }
         gameHtml += `
             <label for="flying_${game}">
-                <input type="checkbox" id="flying_${game}"> 飛んじまった
+                <input type="checkbox" id="flying_${game}"> トんじまった
             </label><br>
         `;
         rankInputs.innerHTML += gameHtml + "<br>";
