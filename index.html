@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>計算ツール（複数試合対応）</title>
+    <title>支払額計算ツール（複数試合対応）</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="wrapper">
-        <h1 class="title">雀荘料金計算ツール（複数試合対応）</h1>
+        <h1 class="title">支払額計算ツール（複数試合対応）</h1>
         
+        <button id="rulesButton" class="rules-button">ルールを表示</button>
+
         <div id="playerNames">
             <h3>プレイヤー名</h3>
             <label for="player1">プレイヤー1:</label>
@@ -25,13 +27,26 @@
         <label for="gameCount">試合数:</label>
         <input type="number" id="gameCount" value="1" min="1"><br><br>
 
-        <label for="totalAmount">合計料金（円）:</label>
+        <label for="totalAmount">合計金額（円）:</label>
         <input type="number" id="totalAmount" value="10000"><br><br>
 
         <div id="rankInputs"></div>
 
         <button onclick="calculatePayments()" class="submit-button">計算する</button>
         <p id="result"></p>
+    </div>
+
+    <div id="rulesModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>ルール説明</h2>
+            <p>このツールは、麻雀の順位に基づいて各プレイヤーの支払額を計算します。</p>
+            <ul>
+                <li>順位に応じた負債ポイント: 1位(0), 2位(2), 3位(3), 4位(5)</li>
+                <li>「飛んじまった」状態の場合は、3位の負債ポイントを4位に1p渡します。</li>
+                <li>各試合の支払額は、(プレイヤーの負債ポイント / 総負債ポイント) × 試合の賭け金 で計算されます。</li>
+            </ul>
+        </div>
     </div>
 
     <script src="js/script.js"></script>
