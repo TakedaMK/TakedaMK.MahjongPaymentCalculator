@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>計算ツール（複数試合対応）</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="wrapper">
+        <h1 class="title">雀荘料金計算ツール（複数試合対応）</h1>
+        
+        <div id="playerNames">
+            <h3>プレイヤー名</h3>
+            <label for="player1">プレイヤー1:</label>
+            <input type="text" id="player1" value="プレイヤー1"><br>
+            <label for="player2">プレイヤー2:</label>
+            <input type="text" id="player2" value="プレイヤー2"><br>
+            <label for="player3">プレイヤー3:</label>
+            <input type="text" id="player3" value="プレイヤー3"><br>
+            <label for="player4">プレイヤー4:</label>
+            <input type="text" id="player4" value="プレイヤー4"><br>
+        </div>
+
+        <label for="gameCount">試合数:</label>
+        <input type="number" id="gameCount" value="1" min="1"><br><br>
+
+        <label for="totalAmount">合計料金（円）:</label>
+        <input type="number" id="totalAmount" value="10000"><br><br>
+
+        <div id="rankInputs"></div>
+
+        <button onclick="calculatePayments()" class="submit-button">計算する</button>
+        <p id="result"></p>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
