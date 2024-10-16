@@ -82,10 +82,28 @@ function updatePlayerNames() {
     updateRankInputs();
 }
 
+// モーダル関連の機能を追加
+function showModal() {
+    document.getElementById('rulesModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('rulesModal').style.display = 'none';
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("gameCount").addEventListener("change", updateRankInputs);
     for (let i = 1; i <= 4; i++) {
         document.getElementById(`player${i}`).addEventListener("input", updatePlayerNames);
     }
     updateRankInputs(); // 初期表示用
+
+    // モーダル関連のイベントリスナーを追加
+    document.getElementById('rulesButton').addEventListener('click', showModal);
+    document.querySelector('.close').addEventListener('click', closeModal);
+    window.addEventListener('click', function(event) {
+        if (event.target == document.getElementById('rulesModal')) {
+            closeModal();
+        }
+    });
 });
