@@ -49,6 +49,14 @@ function calculatePayments() {
     }
 
     document.getElementById("result").textContent = results;
+    
+    // 結果表示後に画面を最下部までスクロール
+    setTimeout(() => {
+        window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: 'smooth'
+        });
+    }, 100);
 }
 
 function updateRankInputs() {
@@ -71,7 +79,7 @@ function updateRankInputs() {
         }
         gameHtml += `
             <label for="flying_${game}">
-                <input type="checkbox" id="flying_${game}"> トんじまった
+                <input type="checkbox" id="flying_${game}"> 飛んじまった
             </label><br>
         `;
         rankInputs.innerHTML += gameHtml + "<br>";
