@@ -1,5 +1,5 @@
 function calculatePayments() {
-    const gameCount = parseInt(document.getElementById("gameCount").value);
+    const gameCount = parseInt(document.getElementById("gameCount").value, 10); // 基数を明示的に指定
     const totalAmount = parseFloat(document.getElementById("totalAmount").value);
     const normalDebtPoints = [0, 2, 3, 5];
     const flyingDebtPoints = [0, 2, 2, 6];
@@ -20,7 +20,7 @@ function calculatePayments() {
         ];
 
         if (new Set(ranks).size !== 4) {
-            document.getElementById("result").textContent = `エラー: 第${game}試合の順位が重複しています。異なる順位を選択してください。`;
+            document.getElementById("result").textContent = `エラー: 第${game}半荘の順位が重複しています。異なる順位を選択してください。`;
             return;
         }
 
@@ -28,7 +28,7 @@ function calculatePayments() {
         const debtPoints = isFlying ? flyingDebtPoints : normalDebtPoints;
         const totalPoints = debtPoints.reduce((sum, points) => sum + points, 0);
 
-        // この試合の支払額を計算
+        // この半荘の支払額を計算
         const gameAmount = totalAmount / gameCount;
         for (let i = 0; i < ranks.length; i++) {
             const payment = (debtPoints[ranks[i] - 1] / totalPoints) * gameAmount;
@@ -36,7 +36,7 @@ function calculatePayments() {
         }
     }
 
-    let results = `${gameCount}試合の合計結果:\n`;
+    let results = `${gameCount}半荘の合計結果:\n`;
     for (let i = 0; i < playerTotals.length; i++) {
         results += `${playerNames[i]} の支払額は: ${playerTotals[i].toFixed(2)} 円\n`;
     }
@@ -49,7 +49,7 @@ function calculatePayments() {
     }
 
     document.getElementById("result").textContent = results;
-    
+
     // 結果表示後に画面を最下部までスクロール
     setTimeout(() => {
         window.scrollTo({
@@ -65,7 +65,7 @@ function updateRankInputs() {
     rankInputs.innerHTML = "";
 
     for (let game = 1; game <= gameCount; game++) {
-        let gameHtml = `<h3>第${game}試合</h3>`;
+        let gameHtml = `<h3>第${game}半荘</h3>`;
         for (let player = 1; player <= 4; player++) {
             gameHtml += `
                 <label for="rank${player}_${game}">${document.getElementById(`player${player}`).value}の順位:</label>
@@ -99,7 +99,7 @@ function closeModal() {
     document.getElementById('rulesModal').style.display = 'none';
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     document.getElementById("gameCount").addEventListener("change", updateRankInputs);
     for (let i = 1; i <= 4; i++) {
         document.getElementById(`player${i}`).addEventListener("input", updatePlayerNames);
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // モーダル関連のイベントリスナーを追加
     document.getElementById('rulesButton').addEventListener('click', showModal);
     document.querySelector('.close').addEventListener('click', closeModal);
-    window.addEventListener('click', function(event) {
+    window.addEventListener('click', function (event) {
         if (event.target == document.getElementById('rulesModal')) {
             closeModal();
         }
