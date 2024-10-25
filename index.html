@@ -27,7 +27,19 @@
         </div>
 
         <label for="gameCount">半荘数:</label>
-        <input type="number" id="gameCount" value="1" min="1"><br><br>
+        <select id="gameCount">
+            <option value="1">1半荘</option>
+            <option value="2">2半荘</option>
+            <option value="3">3半荘</option>
+            <option value="4">4半荘</option>
+            <option value="5">5半荘</option>
+            <option value="6">6半荘</option>
+            <option value="7">7半荘</option>
+            <option value="8">8半荘</option>
+            <option value="9">9半荘</option>
+            <option value="10">10半荘</option>
+        </select>
+        <br><br>
 
         <label for="totalAmount">雀荘の料金（円）:</label>
         <input type="number" id="totalAmount" value="10000"><br><br>
@@ -46,8 +58,8 @@
             <ul>
                 <li>半荘ごとに、順位に応じた負債ポイント: 1位(0), 2位(2), 3位(3), 4位(5)が配布されます。</li>
                 <li>「トんじまった」状態の場合は、3位の負債ポイントを4位に1p渡します。</li>
-                <li>各試合の支払額は<br>
-                    <span class="rule">(プレイヤーの負債ポイント / 総負債ポイント) × (雀荘の総額 / 試合数) </span><br>
+                <li>各半荘の支払額は<br>
+                    <span class="rule">(プレイヤーの負債ポイント / 総負債ポイント) × (雀荘の総額 / 半荘数) </span><br>
                     で計算されます。
                 </li>
             </ul>
