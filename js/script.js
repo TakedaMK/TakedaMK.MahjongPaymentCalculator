@@ -1,5 +1,5 @@
 function calculatePayments() {
-    const gameCount = parseInt(document.getElementById("gameCount").value, 10); // 基数を明示的に指定
+    const gameCount = parseInt(document.getElementById("gameCount").value, 10);
     const totalAmount = parseFloat(document.getElementById("totalAmount").value);
     const normalDebtPoints = [0, 2, 3, 5];
     const flyingDebtPoints = [0, 2, 2, 6];
@@ -20,7 +20,7 @@ function calculatePayments() {
         ];
 
         if (new Set(ranks).size !== 4) {
-            document.getElementById("result").textContent = `エラー: 第${game}半荘の順位が重複しています。異なる順位を選択してください。`;
+            document.getElementById("result").textContent = `エラー: 第${game}試合の順位が重複しています。異なる順位を選択してください。`;
             return;
         }
 
@@ -28,7 +28,7 @@ function calculatePayments() {
         const debtPoints = isFlying ? flyingDebtPoints : normalDebtPoints;
         const totalPoints = debtPoints.reduce((sum, points) => sum + points, 0);
 
-        // この半荘の支払額を計算
+        // この試合の支払額を計算
         const gameAmount = totalAmount / gameCount;
         for (let i = 0; i < ranks.length; i++) {
             const payment = (debtPoints[ranks[i] - 1] / totalPoints) * gameAmount;
@@ -36,16 +36,19 @@ function calculatePayments() {
         }
     }
 
-    let results = `${gameCount}半荘の合計結果:\n`;
+    let results = `${gameCount}試合の合計結果 (小数点以下切り捨て)\n`;
     for (let i = 0; i < playerTotals.length; i++) {
-        results += `${playerNames[i]} の支払額は: ${playerTotals[i].toFixed(2)} 円\n`;
+        // 小数点以下を四捨五入して整数で表示
+        results += `${playerNames[i]} の支払額は: ${Math.floor(playerTotals[i])} 円\n`;
     }
 
-    // 支払総額の確認
-    const totalPaid = playerTotals.reduce((sum, payment) => sum + payment, 0);
-    results += `\n支払総額: ${totalPaid.toFixed(2)} 円`;
-    if (Math.abs(totalPaid - totalAmount) > 0.01) {
-        results += `\n(注意: 四捨五入の関係で合計金額と ${(totalPaid - totalAmount).toFixed(2)} 円の誤差があります)`;
+    // 支払総額の確認（こちらも整数で表示）
+    const totalPaid = Math.floor(playerTotals.reduce((sum, payment) => sum + payment, 0));
+    results += `\n支払総額: ${totalPaid} 円`;
+
+    // 誤差の確認も整数で表示
+    if (Math.abs(totalPaid - totalAmount) > 0) {
+        results += `\n(注意: 四捨五入の関係で合計金額と ${Math.floor(totalPaid - totalAmount)} 円の誤差があります)`;
     }
 
     document.getElementById("result").textContent = results;
