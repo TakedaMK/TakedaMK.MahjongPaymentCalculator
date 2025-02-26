@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>支払額計算ツール</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -59,6 +60,8 @@
                 <li>半荘ごとに、順位に応じた負債ポイントが配布されます。<br><br>
                     &emsp;1位: 0p, 2位: 2p, 3位:3p, 4位: 5p <br><br></li>
                 <li>「トんじまった」状態の場合は、3位の負債ポイントを4位に1p渡します。</li><br>
+                <li>2~4位のプレイヤーの支払額下2桁は0になるように調整します。<br><br>
+                    &emsp;下2桁の金額は、1つ上の順位のプレイヤーに渡します。<br><br></li>
                 <li>各半荘の支払額は<br>
                     <span class="rule">&emsp;(プレイヤーの負債ポイント / 総負債ポイント) <br>&emsp;×<br>&emsp;(雀荘の総額 / 半荘数) </span><br>
                     で計算されます。
