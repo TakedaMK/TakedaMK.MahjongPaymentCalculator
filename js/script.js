@@ -70,7 +70,7 @@ function calculatePayments() {
 
     // 結果の表示
     let results = `${gameCount}試合の合計結果\n\n`;
-    playersWithRanks.forEach(player => {
+    playersWithRanks.reverse().forEach(player => {
         results += `${player.name} の支払額は: ${player.amount} 円\n`;
     });
 
