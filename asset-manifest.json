@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/Takedamk.MahjongPaymentCalculator/static/css/main.a94d52ac.css",
-    "main.js": "/Takedamk.MahjongPaymentCalculator/static/js/main.3654418b.js",
-    "static/js/453.86899728.chunk.js": "/Takedamk.MahjongPaymentCalculator/static/js/453.86899728.chunk.js",
-    "index.html": "/Takedamk.MahjongPaymentCalculator/index.html",
-    "main.a94d52ac.css.map": "/Takedamk.MahjongPaymentCalculator/static/css/main.a94d52ac.css.map",
-    "main.3654418b.js.map": "/Takedamk.MahjongPaymentCalculator/static/js/main.3654418b.js.map",
-    "453.86899728.chunk.js.map": "/Takedamk.MahjongPaymentCalculator/static/js/453.86899728.chunk.js.map"
+    "main.css": "/TakedaMK.MahjongPaymentCalculator/static/css/main.a94d52ac.css",
+    "main.js": "/TakedaMK.MahjongPaymentCalculator/static/js/main.0037a6e7.js",
+    "static/js/453.86899728.chunk.js": "/TakedaMK.MahjongPaymentCalculator/static/js/453.86899728.chunk.js",
+    "index.html": "/TakedaMK.MahjongPaymentCalculator/index.html",
+    "main.a94d52ac.css.map": "/TakedaMK.MahjongPaymentCalculator/static/css/main.a94d52ac.css.map",
+    "main.0037a6e7.js.map": "/TakedaMK.MahjongPaymentCalculator/static/js/main.0037a6e7.js.map",
+    "453.86899728.chunk.js.map": "/TakedaMK.MahjongPaymentCalculator/static/js/453.86899728.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a94d52ac.css",
-    "static/js/main.3654418b.js"
+    "static/js/main.0037a6e7.js"
   ]
 }
