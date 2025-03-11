@@ -17,10 +17,10 @@ const PREDEFINED_PLAYERS = ['ゆっぺ', '瀬川', '公紀', '直矢'];
 
 const Calculator: React.FC = () => {
   const [players, setPlayers] = useState<Player[]>([
-    { id: 1, name: 'プレイヤー1' },
-    { id: 2, name: 'プレイヤー2' },
-    { id: 3, name: 'プレイヤー3' },
-    { id: 4, name: 'プレイヤー4' },
+    { id: 1, name: 'ゆっぺ' },
+    { id: 2, name: '瀬川' },
+    { id: 3, name: '公紀' },
+    { id: 4, name: '直矢' },
   ]);
   const [gameCount, setGameCount] = useState<number>(1);
   const [totalAmount, setTotalAmount] = useState<number | null>(null);
@@ -40,13 +40,17 @@ const Calculator: React.FC = () => {
 
   useEffect(() => {
     const initialResults = Array(gameCount).fill(null).map(() => ({
-      ranks: [1, 1, 1, 1],
+      ranks: [1, 2, 3, 4],
       isFlying: false
     }));
     setGameResults(initialResults);
   }, [gameCount]);
 
   // プレイヤー名の更新（プルダウンまたは手入力）
+
+  // mapでプレイヤー全員に対して処理を行う
+  // 変更したいidと、変更先の名前を引数として受け取り、idが一致したらnewNameに変更する
+  // それ以外のプレイヤーは変化なしとする
   const handlePlayerNameChange = (id: number, newName: string) => {
     setPlayers(players.map(player =>
       player.id === id ? { ...player, name: newName } : player

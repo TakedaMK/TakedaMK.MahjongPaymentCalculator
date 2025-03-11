@@ -21,12 +21,12 @@ function App() {
   return (
     <Router>
       <div className="container">
-        <h1 className="title">麻雀精算ツール</h1>
+        <h1 className="title">支払額計算ツール</h1>
 
         <nav className="nav-tabs">
-          <NavTab to="/">計算機</NavTab>
+          <NavTab to="/">計算</NavTab>
           <NavTab to="/history">履歴</NavTab>
-          <NavTab to="/stats">統計</NavTab>
+          <NavTab to="/stats">戦績</NavTab>
         </nav>
 
         <Routes>
