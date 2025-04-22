@@ -1,19 +1,19 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "麻雀計算",
+  "name": "麻雀 雀荘金額支払計算",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "tyun.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "tyun.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
+      "src": "tyun.png",
       "type": "image/png",
       "sizes": "512x512"
     }
