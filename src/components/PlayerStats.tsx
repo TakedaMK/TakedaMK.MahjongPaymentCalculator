@@ -99,13 +99,13 @@ const PlayerStats: React.FC = () => {
         {Object.values(playerStats).map(stat => (
           <div key={stat.name} className="player-stat-card">
             <h3>{stat.name}</h3>
-            <p><span>総半荘数</span> <span> {stat.games}半荘</span></p>
-            <p><span>平均順位</span> <span> {stat.averageRank.toFixed(2)}</span></p>
-            <p><span>トップ率</span> <span> {((stat.firstPlace / stat.games) * 100).toFixed(1)}%</span></p>
-            <p><span>2位率</span> <span> {((stat.secondPlace / stat.games) * 100).toFixed(1)}%</span></p>
-            <p><span>3位率</span> <span> {((stat.thirdPlace / stat.games) * 100).toFixed(1)}%</span></p>
-            <p><span>4位率</span> <span> {((stat.fourthPlace / stat.games) * 100).toFixed(1)}%</span></p>
-            <p><span>トビ回数</span> <span> {stat.flyingCount}回</span></p>
+            <p><span className="stat-label">総半荘数</span><span className="stat-value">{stat.games}半荘</span></p>
+            <p><span className="stat-label">平均順位</span><span className="stat-value">{stat.averageRank.toFixed(2)}</span></p>
+            <p><span className="stat-label">トップ率</span><span className="stat-value">{((stat.firstPlace / stat.games) * 100).toFixed(1)}%</span></p>
+            <p><span className="stat-label">2位率</span><span className="stat-value">{((stat.secondPlace / stat.games) * 100).toFixed(1)}%</span></p>
+            <p><span className="stat-label">3位率</span><span className="stat-value">{((stat.thirdPlace / stat.games) * 100).toFixed(1)}%</span></p>
+            <p><span className="stat-label">4位率</span><span className="stat-value">{((stat.fourthPlace / stat.games) * 100).toFixed(1)}%</span></p>
+            <p><span className="stat-label">トビ回数</span><span className="stat-value">{stat.flyingCount}回</span></p>
           </div>
         ))}
       </div>

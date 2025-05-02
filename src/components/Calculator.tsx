@@ -75,15 +75,8 @@ const Calculator: React.FC = () => {
     setGameResults(newResults);
   };
 
-  const saveToFirestore = async (results: string, playersWithRanks: any[], gamesWithPlayerRanks: any[]) => {
-    const shouldSave = window.confirm('この結果を保存しますか？');
-
-    if (!shouldSave) {
-      return;
-    }
-
-    // 保存する前に日付選択モーダルを表示
-    setTempResults({ results, playersWithRanks, gamesWithPlayerRanks });
+  const handleSaveClick = () => {
+    // 日付選択モーダルを表示
     setIsDateModalOpen(true);
   };
 
@@ -114,7 +107,6 @@ const Calculator: React.FC = () => {
       await addDoc(collection(db, 'gameRecords'), gameRecord);
       alert('記録を保存しました！');
       setIsDateModalOpen(false);
-      setTempResults(null);
     } catch (error) {
       console.error('Error saving record:', error);
       alert('記録の保存に失敗しました。');
@@ -211,8 +203,8 @@ const Calculator: React.FC = () => {
 
     setCalculationResult(results);
 
-    // 計算結果の保存
-    saveToFirestore(results, playersWithRanks, gamesWithPlayerRanks);
+    // 計算結果をstateに保存しておく（保存ボタンクリック時に使用）
+    setTempResults({ results, playersWithRanks, gamesWithPlayerRanks });
   };
 
   // const clickTest = (test: string) => () => {
@@ -330,6 +322,15 @@ const Calculator: React.FC = () => {
       {calculationResult && (
         <div id="result">
           {calculationResult}
+          <div style={{ marginTop: '20px', textAlign: 'center' }}>
+            <button
+              className="submit-button"
+              onClick={handleSaveClick}
+              style={{ marginTop: '10px' }}
+            >
+              結果を保存する
+            </button>
+          </div>
         </div>
       )}
 
