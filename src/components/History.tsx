@@ -87,13 +87,15 @@ const History: React.FC = () => {
 
           <div className="players-result">
             <h4>最終結果</h4>
-            {record.players.map((player, index) => (
-              <div key={index} className="player-result">
-                <span>{player.name}</span>
-                <span>{player.finalAmount.toLocaleString()}円</span>
-                <span>平均順位: {player.averageRank.toFixed(2)}</span>
-              </div>
-            ))}
+            {[...record.players]
+              .sort((a, b) => a.finalAmount - b.finalAmount)
+              .map((player, index) => (
+                <div key={index} className="player-result">
+                  <span>{player.name}</span>
+                  <span>{player.finalAmount.toLocaleString()}円</span>
+                  <span>平均順位: {player.averageRank.toFixed(2)}</span>
+                </div>
+              ))}
           </div>
 
           <details className="games-detail">
