@@ -120,8 +120,8 @@ const Calculator: React.FC = () => {
       return;
     }
 
-    const normalDebtPoints = [0, 2, 3, 5];
-    const flyingDebtPoints = [0, 2, 2, 6];
+    const normalDebtPoints = [0, 1, 3, 6];
+    const flyingDebtPoints = [0, 1, 2, 7];
     let playerTotals = [0, 0, 0, 0];
     let playerRanks = Array(4).fill(0);
 
