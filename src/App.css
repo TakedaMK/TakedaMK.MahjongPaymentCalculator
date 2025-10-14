@@ -449,3 +449,18 @@ select:focus {
   align-items: center;
   margin-bottom: 10px;
 }
+
+
+/* 数値入力欄の上下矢印を非表示にする */
+
+/* Chrome, Safari, Edge, Opera 用 */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox 用 */
+input[type=number] {
+  -moz-appearance: textfield;
+}
