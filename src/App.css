@@ -443,6 +443,17 @@ select:focus {
   /* グレー */
 }
 
+.rank-item .player-name {
+  font-weight: bold;
+}
+
+.rank-item .player-score {
+  margin-left: auto;
+  font-size: 0.95em;
+  color: #333;
+  padding-right: 8px;
+}
+
 .history-header {
   display: flex;
   justify-content: space-between;

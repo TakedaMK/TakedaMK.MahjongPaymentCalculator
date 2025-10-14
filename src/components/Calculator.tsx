@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, doc, setDoc } from 'firebase/firestore';
 import { GameRecord } from '../types/types';
 
 interface Player {
@@ -44,12 +44,12 @@ const Calculator: React.FC = () => {
   );
 
   // 実力反映率 γ（0〜1）。例: 0.3 = 総額の30%を成績で動かす
-  const [gamma, setGamma] = useState<number>(0.3);
+  const [gamma, setGamma] = useState<number>(0.25);
 
   // 計算結果を保存用に持っておく
   const [tempResults, setTempResults] = useState<{
     results: string;
-    payments: number[];
+    finalAmounts: number[];
     finalPoints: number[];
     perGamePoints: number[][];
     gamesWithDetails: any[];
@@ -208,7 +208,7 @@ const Calculator: React.FC = () => {
   };
 
   // メイン計算（ボタン押下）
-  const calculatePayments = () => {
+  const calculatefinalAmounts = () => {
     if (totalAmount === null || totalAmount <= 0) {
       alert('雀荘の料金を入力してください');
       return;
@@ -236,17 +236,17 @@ const Calculator: React.FC = () => {
     const { perGame, final } = calcFinalPoints(gameResults);
 
     // 最後に一回だけ会計
-    const payments = settleOnceAtEnd(final, totalAmount, gamma);
+    const finalAmounts = settleOnceAtEnd(final, totalAmount, gamma);
 
     // 表示用：成績順に表示するか、プレイヤー配列順で表示するかはお好みで
     // ここではプレイヤー配列順
     let results = `${gameCount}半荘の合計結果（実力反映率: ${(gamma * 100).toFixed(0)}%）\n\n`;
 
     players.forEach((p, i) => {
-      results += `${p.name} の支払額: ${Math.round(payments[i])} 円  （最終ポイント: ${final[i].toFixed(1)}）\n`;
+      results += `${p.name} の支払額: ${Math.round(finalAmounts[i])} 円  （最終ポイント: ${final[i].toFixed(1)}）\n`;
     });
 
-    const totalPaid = payments.reduce((s, x) => s + Math.round(x), 0);
+    const totalPaid = finalAmounts.reduce((s, x) => s + Math.round(x), 0);
     if (totalPaid !== totalAmount) {
       results += `\n※丸め調整のため合計 ${totalPaid} 円（卓代 ${totalAmount} 円と ±${totalPaid - totalAmount} 円の誤差）\n`;
     }
@@ -256,14 +256,14 @@ const Calculator: React.FC = () => {
       gameNumber: idx + 1,
       ranks: g.ranks,
       scores: g.scores,
-      isFlying: g.isFlying,
+      isFlying: g.scores.some(s => parseInt(s, 10) < 0),
       points: perGame[idx], // この半荘での4人のポイント
     }));
 
     setCalculationResult(results);
     setTempResults({
       results,
-      payments,
+      finalAmounts,
       finalPoints: final,
       perGamePoints: perGame,
       gamesWithDetails,
@@ -277,15 +277,38 @@ const Calculator: React.FC = () => {
     try {
       const sortedPlayers = [...players].sort((a, b) => a.id - b.id);
 
+      const averageRanks = Array(players.length).fill(0);
+      if (gameCount > 0) {
+        for (let i = 0; i < players.length; i++) {
+          const sumOfRanks = tempResults.gamesWithDetails.reduce(
+            (sum, game) => sum + game.ranks[i],
+            0
+          );
+          averageRanks[i] = sumOfRanks / gameCount;
+        }
+      }
+
+      const now = new Date();
+      const saveTime = new Date(selectedDate);
+      saveTime.setHours(now.getHours());
+      saveTime.setMinutes(now.getMinutes());
+
+      const year = saveTime.getFullYear();
+      const month = String(saveTime.getMonth() + 1).padStart(2, '0');
+      const day = String(saveTime.getDate()).padStart(2, '0');
+      const hours = String(saveTime.getHours()).padStart(2, '0');
+      const minutes = String(saveTime.getMinutes()).padStart(2, '0');
+      const docId = `${year}${month}${day}${hours}${minutes}`;
+
       const record: any = {
-        date: new Date(selectedDate),
+        date: saveTime,
         totalAmount,
         gameCount,
         players: sortedPlayers.map((player, i) => ({
           name: player.name,
-          // 支払金額と最終ポイントも保存
-          payment: Math.round(tempResults.payments[i]),
+          finalAmount: Math.round(tempResults.finalAmounts[i]),
           finalPoint: tempResults.finalPoints[i],
+          averageRank: averageRanks[i],
         })),
         games: tempResults.gamesWithDetails,
         rules: {
@@ -297,7 +320,7 @@ const Calculator: React.FC = () => {
         summaryText: tempResults.results, // 任意：そのままの表示テキスト
       };
 
-      await addDoc(collection(db, 'gameRecords'), record as unknown as GameRecord);
+      await setDoc(doc(db, 'gameRecords', docId), record as unknown as GameRecord);
       alert('記録を保存しました！');
       setIsDateModalOpen(false);
     } catch (error) {
@@ -389,7 +412,7 @@ const Calculator: React.FC = () => {
         />
         <span>{(gamma * 100).toFixed(0)}%</span>
         <div style={{ fontSize: '0.9em', color: '#555', marginTop: 4 }}>
-          数値が高いほど「成績差」を反映
+          総額のγ%を成績で動かす。
         </div>
       </div>
 
@@ -453,7 +476,7 @@ const Calculator: React.FC = () => {
         ))}
       </div>
 
-      <button className="submit-button" onClick={calculatePayments}>
+      <button className="submit-button" onClick={calculatefinalAmounts}>
         計算する
       </button>
 
