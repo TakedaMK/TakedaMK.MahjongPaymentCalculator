@@ -10,7 +10,7 @@ interface Player {
 
 interface GameResult {
   ranks: number[];            // 1〜4位（入力）
-  isFlying: boolean;         // 既存。今回の計算では未使用（UIは残しつつ無視）
+  isFlying: boolean[];         // 変更: プレイヤーごとのトビ状態
   scores: string[];          // 追加: 各半荘の最終点数（100点単位OK）
 }
 
@@ -44,7 +44,7 @@ const Calculator: React.FC = () => {
   );
 
   // 実力反映率 γ（0〜1）。例: 0.3 = 総額の30%を成績で動かす
-  const [gamma, setGamma] = useState<number>(0.25);
+  const [gamma, setGamma] = useState<number>(0.2);
 
   // 計算結果を保存用に持っておく
   const [tempResults, setTempResults] = useState<{
@@ -61,7 +61,7 @@ const Calculator: React.FC = () => {
       .fill(null)
       .map(() => ({
         ranks: [1, 2, 3, 4],
-        isFlying: false,
+        isFlying: [false, false, false, false],
         scores: ['25000', '25000', '25000', '25000'],
       }));
     setGameResults(initialResults);
@@ -93,6 +93,11 @@ const Calculator: React.FC = () => {
     newScores[playerIndex] = score;
     game.scores = newScores;
 
+    // スコアに応じてisFlyingフラグを自動更新
+    const newIsFlying = [...game.isFlying];
+    newIsFlying[playerIndex] = !isNaN(parseInt(score, 10)) && parseInt(score, 10) < 0;
+    game.isFlying = newIsFlying;
+
     // スコアを数値に変換（空文字や'-'はNaN扱い）
     const numericScores = newScores.map(s => parseInt(s, 10));
 
@@ -122,11 +127,11 @@ const Calculator: React.FC = () => {
   };
 
   // トビの更新（今回の計算には使わないがUIは残す）
-  const handleFlyingChange = (gameIndex: number, isFlying: boolean) => {
-    const newResults = [...gameResults];
-    newResults[gameIndex] = { ...newResults[gameIndex], isFlying };
-    setGameResults(newResults);
-  };
+  // const handleFlyingChange = (gameIndex: number, isFlying: boolean) => {
+  //   const newResults = [...gameResults];
+  //   newResults[gameIndex] = { ...newResults[gameIndex], isFlying };
+  //   setGameResults(newResults);
+  // };
 
   const handleSaveClick = () => {
     setIsDateModalOpen(true);
@@ -240,7 +245,7 @@ const Calculator: React.FC = () => {
 
     // 表示用：成績順に表示するか、プレイヤー配列順で表示するかはお好みで
     // ここではプレイヤー配列順
-    let results = `${gameCount}半荘の合計結果（実力反映率: ${(gamma * 100).toFixed(0)}%）\n\n`;
+    let results = `${gameCount}半荘の合計結果（γ率: ${(gamma * 100).toFixed(0)}%）\n\n`;
 
     players.forEach((p, i) => {
       results += `${p.name} の支払額: ${Math.round(finalAmounts[i])} 円  （最終ポイント: ${final[i].toFixed(1)}）\n`;
@@ -256,7 +261,7 @@ const Calculator: React.FC = () => {
       gameNumber: idx + 1,
       ranks: g.ranks,
       scores: g.scores,
-      isFlying: g.scores.some(s => parseInt(s, 10) < 0),
+      isFlying: g.isFlying,
       points: perGame[idx], // この半荘での4人のポイント
     }));
 

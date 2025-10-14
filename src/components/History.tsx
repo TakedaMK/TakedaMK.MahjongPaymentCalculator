@@ -136,7 +136,18 @@ const History: React.FC = () => {
                       );
                     })}
                   </div>
-                  {game.isFlying && <span className="flying-badge">トビ有り</span>}
+                  {(Array.isArray(game.isFlying) && game.isFlying.some(f => f)) || (typeof game.isFlying === 'boolean' && game.isFlying) ? (
+                    <div className="flying-badge">
+                      トビ: {
+                        Array.isArray(game.isFlying)
+                          ? record.players
+                            .filter((_, playerIndex) => game.isFlying[playerIndex])
+                            .map(p => p.name)
+                            .join(', ')
+                          : '有り'
+                      }
+                    </div>
+                  ) : null}
                 </div>
               ))}
             </div>

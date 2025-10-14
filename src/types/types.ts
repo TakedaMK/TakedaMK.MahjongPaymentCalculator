@@ -46,7 +46,7 @@ export interface GameRecord {
       playerName: string;
       rank: number;
     }[];
-    isFlying: boolean;
+    isFlying: boolean[];
     scores?: string[];
   }[];
 }

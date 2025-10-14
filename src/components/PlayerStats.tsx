@@ -187,8 +187,14 @@ const PlayerStats: React.FC = () => {
               if (rank === 3) finalStats[player.name]!.thirdPlace++;
               if (rank === 4) finalStats[player.name]!.fourthPlace++;
 
-              // トビ回数のカウント
-              if (game.scores && Number(game.scores[playerIndex]) < 0) {
+              // トビ回数のカウントロジックを修正
+              if (Array.isArray(game.isFlying)) {
+                // 新しいデータ形式: isFlyingが配列で、該当プレイヤーがtrueの場合
+                if (game.isFlying[playerIndex]) {
+                  finalStats[player.name]!.flyingCount++;
+                }
+              } else if (game.isFlying === true && rank === 4) {
+                // 古いデータ形式: isFlyingがtrueで、そのプレイヤーが4位の場合
                 finalStats[player.name]!.flyingCount++;
               }
             }
@@ -239,7 +245,7 @@ const PlayerStats: React.FC = () => {
             <p><span className="stat-label">2位率</span><span className="stat-value">{((stat.secondPlace / stat.games) * 100).toFixed(1)}%</span></p>
             <p><span className="stat-label">3位率</span><span className="stat-value">{((stat.thirdPlace / stat.games) * 100).toFixed(1)}%</span></p>
             <p><span className="stat-label">4位率</span><span className="stat-value">{((stat.fourthPlace / stat.games) * 100).toFixed(1)}%</span></p>
-            <p><span className="stat-label">トビ率</span><span className="stat-value">{((stat.flyingCount / stat.games) * 100).toFixed(1)}% ({stat.flyingCount}回)</span></p>
+            <p><span className="stat-label">トビ率</span><span className="stat-value">{stat.flyingCount}回</span></p>
           </div>
         ))}
       </div>
