@@ -136,6 +136,11 @@ const History: React.FC = () => {
                       );
                     })}
                   </div>
+                  {game.yakuman && (
+                    <div className="yakuman-badge">
+                      役満: {game.yakuman.playerName} - {game.yakuman.yakumanName}
+                    </div>
+                  )}
                   {(Array.isArray(game.isFlying) && game.isFlying.some(f => f)) || (typeof game.isFlying === 'boolean' && game.isFlying) ? (
                     <div className="flying-badge">
                       トビ: {

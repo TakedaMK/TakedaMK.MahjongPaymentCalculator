@@ -48,6 +48,10 @@ export interface GameRecord {
     }[];
     isFlying: boolean[];
     scores?: string[];
+    yakuman?: {
+      playerName: string;
+      yakumanName:string;
+    }
   }[];
 }
 

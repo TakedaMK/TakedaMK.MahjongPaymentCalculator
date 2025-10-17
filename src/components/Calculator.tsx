@@ -12,9 +12,19 @@ interface GameResult {
   ranks: number[];            // 1〜4位（入力）
   isFlying: boolean[];         // 変更: プレイヤーごとのトビ状態
   scores: string[];          // 追加: 各半荘の最終点数（100点単位OK）
+  yakuman: {
+    playerIndex: number | null;
+    yakumanName: string;
+  };
 }
 
 const PREDEFINED_PLAYERS = ['ゆっぺ', '瀬川', '公紀', '直矢'];
+
+const YAKUMAN_LIST = [
+  '天和', '地和', '大三元', '大四喜', '小四喜', '四暗刻', '四暗刻単騎',
+  '清老頭', '四槓子', '国士無双', '国士無双十三面待ち',
+  '緑一色', '字一色', '九蓮宝燈', '純正九蓮宝燈'
+];
 
 // ルール設定（返し点=25,000、ウマ=+30,+10,-10,-30、オカなし）
 const RULES = {
@@ -63,6 +73,7 @@ const Calculator: React.FC = () => {
         ranks: [1, 2, 3, 4],
         isFlying: [false, false, false, false],
         scores: ['25000', '25000', '25000', '25000'],
+        yakuman: { playerIndex: null, yakumanName: '' },
       }));
     setGameResults(initialResults);
   }, [gameCount]);
@@ -123,6 +134,19 @@ const Calculator: React.FC = () => {
     }
 
     newResults[gameIndex] = game;
+    setGameResults(newResults);
+  };
+
+  const handleYakumanChange = (
+    gameIndex: number,
+    playerIndex: number | null,
+    yakumanName: string
+  ) => {
+    const newResults = [...gameResults];
+    newResults[gameIndex] = {
+      ...newResults[gameIndex],
+      yakuman: { playerIndex, yakumanName },
+    };
     setGameResults(newResults);
   };
 
@@ -263,6 +287,12 @@ const Calculator: React.FC = () => {
       scores: g.scores,
       isFlying: g.isFlying,
       points: perGame[idx], // この半荘での4人のポイント
+      yakuman: g.yakuman.playerIndex !== null && g.yakuman.yakumanName
+        ? {
+            playerName: players[g.yakuman.playerIndex].name,
+            yakumanName: g.yakuman.yakumanName,
+          }
+        : null,
     }));
 
     setCalculationResult(results);
@@ -464,6 +494,37 @@ const Calculator: React.FC = () => {
                   </select>
                 </div>
               ))}
+            </div>
+
+            {/* 役満記録 */}
+            <div className="yakuman-section" style={{ marginTop: '16px', borderTop: '1px solid #eee', paddingTop: '16px' }}>
+              <h4>役満</h4>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <select
+                  value={game.yakuman.playerIndex ?? ''}
+                  onChange={(e) => {
+                    const playerIndex = e.target.value === '' ? null : Number(e.target.value);
+                    handleYakumanChange(gameIndex, playerIndex, playerIndex === null ? '' : game.yakuman.yakumanName);
+                  }}
+                >
+                  <option value="">達成者なし</option>
+                  {players.map((p, idx) => (
+                    <option key={p.id} value={idx}>{p.name}</option>
+                  ))}
+                </select>
+
+                {game.yakuman.playerIndex !== null && (
+                  <select
+                    value={game.yakuman.yakumanName}
+                    onChange={(e) => handleYakumanChange(gameIndex, game.yakuman.playerIndex, e.target.value)}
+                  >
+                    <option value="">役満を選択</option>
+                    {YAKUMAN_LIST.map(y => (
+                      <option key={y} value={y}>{y}</option>
+                    ))}
+                  </select>
+                )}
+              </div>
             </div>
 
             {/* トビ（今回の計算では未使用） */}

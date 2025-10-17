@@ -14,6 +14,7 @@ interface PlayerStats {
   thirdPlace: number;
   fourthPlace: number;
   flyingCount: number;
+  yakumans: { name: string; date: Date }[];
 }
 
 interface AwardRecord {
@@ -137,6 +138,7 @@ const PlayerStats: React.FC = () => {
               totalPayment: 0,
               averageRank: 0,
               rankSum: 0,
+              yakumans: [],
             };
           }
           const stats = acc[player.name];
@@ -147,8 +149,18 @@ const PlayerStats: React.FC = () => {
             stats.rankSum += player.averageRank * record.gameCount;
           }
         });
+
+        record.games.forEach(game => {
+          if (game.yakuman?.playerName && acc[game.yakuman.playerName]) {
+            acc[game.yakuman.playerName].yakumans.push({
+              name: game.yakuman.yakumanName,
+              date: record.date,
+            });
+          }
+        });
+
         return acc;
-      }, {} as { [key: string]: PlayerStat });
+      }, {} as { [key: string]: PlayerStat & { yakumans: { name: string; date: Date }[] } });
 
       Object.values(calculatedStats).forEach(stats => {
         if (stats.gamesPlayed > 0) {
@@ -172,7 +184,8 @@ const PlayerStats: React.FC = () => {
           secondPlace: 0,
           thirdPlace: 0,
           fourthPlace: 0,
-          flyingCount: 0
+          flyingCount: 0,
+          yakumans: stat.yakumans,
         };
       });
 
@@ -246,6 +259,16 @@ const PlayerStats: React.FC = () => {
             <p><span className="stat-label">3位率</span><span className="stat-value">{((stat.thirdPlace / stat.games) * 100).toFixed(1)}%</span></p>
             <p><span className="stat-label">4位率</span><span className="stat-value">{((stat.fourthPlace / stat.games) * 100).toFixed(1)}%</span></p>
             <p><span className="stat-label">トビ率</span><span className="stat-value">{stat.flyingCount}回</span></p>
+            {stat.yakumans.length > 0 && (
+              <div className="yakuman-list">
+                <p className="stat-label">役満</p>
+                <ul>
+                  {stat.yakumans.map((y, i) => (
+                    <li key={i}>{y.name} ({y.date.toLocaleDateString('ja-JP')})</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         ))}
       </div>
