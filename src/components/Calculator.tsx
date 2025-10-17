@@ -54,7 +54,7 @@ const Calculator: React.FC = () => {
   );
 
   // 実力反映率 γ（0〜1）。例: 0.3 = 総額の30%を成績で動かす
-  const [gamma, setGamma] = useState<number>(0.2);
+  const [gamma, setGamma] = useState<number>(0.3);
 
   // 計算結果を保存用に持っておく
   const [tempResults, setTempResults] = useState<{
