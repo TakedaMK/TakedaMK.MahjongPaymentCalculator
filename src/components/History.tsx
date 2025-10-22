@@ -93,6 +93,7 @@ const History: React.FC = () => {
                 <div key={index} className="player-result">
                   <span>{player.name}</span>
                   <span>{((player.finalAmount ?? player.payment) ?? 0).toLocaleString()}円</span>
+                  <span>最終pt: {player.finalPoint != null ? player.finalPoint.toFixed(1) : '不明'}</span>
                   <span>平均順位: {(player.averageRank ?? 0).toFixed(2)}</span>
                 </div>
               ))}
