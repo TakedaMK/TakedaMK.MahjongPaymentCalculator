@@ -271,13 +271,35 @@ const Calculator: React.FC = () => {
     // ここではプレイヤー配列順
     let results = `${gameCount}半荘の合計結果（γ率: ${(gamma * 100).toFixed(0)}%）\n\n`;
 
+    const baseAmount = totalAmount / 4;
+    results += `均等支払額（総額/4）: ${baseAmount.toLocaleString()} 円\n`;
+
+    const performanceTotal = totalAmount * gamma;
+    results += `成績による変動総額（γ率参照）: ${Math.round(
+      performanceTotal
+    ).toLocaleString()} 円\n\n`;
+
+    // 支払額をまとめて表示
+    results += '【支払額】\n';
     players.forEach((p, i) => {
-      results += `${p.name} の支払額: ${Math.round(finalAmounts[i])} 円  （最終ポイント: ${final[i].toFixed(1)}）\n`;
+      const finalAmount = Math.round(finalAmounts[i]);
+      results += `${p.name}: ${finalAmount.toLocaleString()} 円\n`;
+    });
+    results += '\n';
+
+    // 補足情報を表示
+    results += '--- 補足情報 ---\n';
+    players.forEach((p, i) => {
+      const finalAmount = Math.round(finalAmounts[i]);
+      const pointAmount = finalAmount - baseAmount;
+      results += `【${p.name}】\n`;
+      results += `  ・ポイントによる変動: ${pointAmount >= 0 ? '+' : ''}${pointAmount.toLocaleString()} 円\n`;
+      results += `  ・最終ポイント: ${final[i].toFixed(1)}\n\n`;
     });
 
     const totalPaid = finalAmounts.reduce((s, x) => s + Math.round(x), 0);
     if (totalPaid !== totalAmount) {
-      results += `\n※丸め調整のため合計 ${totalPaid} 円（卓代 ${totalAmount} 円と ±${totalPaid - totalAmount} 円の誤差）\n`;
+      results += `\n※丸め調整のため合計 ${totalPaid.toLocaleString()} 円（卓代 ${totalAmount.toLocaleString()} 円と ±${totalPaid - totalAmount} 円の誤差）\n`;
     }
 
     // 保存用に構造化
