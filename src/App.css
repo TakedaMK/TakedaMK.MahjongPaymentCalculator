@@ -250,13 +250,32 @@ select:focus {
 
 .player-result {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start; /* 左揃えに変更 */
   padding: 8px 0;
   border-bottom: 1px solid #eee;
 }
 
+.player-result span {
+  width: 25%; /* 各項目を均等幅に */
+  text-align: left; /* テキストを左揃えに */
+  box-sizing: border-box;
+  padding-right: 10px; /* 右側に余白を追加 */
+}
+
 .player-result:last-child {
   border-bottom: none;
+}
+
+/* レスポンシブ対応: 画面幅が600px以下の場合 */
+@media screen and (max-width: 600px) {
+  .player-result {
+    flex-wrap: wrap; /* 要素を折り返すように設定 */
+  }
+
+  .player-result span {
+    width: 50%; /* 幅を50%に設定して2列表示にする */
+    margin-bottom: 8px; /* 2行表示時の行間を調整 */
+  }
 }
 
 .games-detail {
