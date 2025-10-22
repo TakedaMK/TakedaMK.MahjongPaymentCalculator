@@ -24,15 +24,15 @@ interface AwardRecord {
 }
 
 interface Awards {
-  highestScore: AwardRecord | null;
-  lowestScore: AwardRecord | null;
-  maxPayment: AwardRecord | null;
-  minPayment: AwardRecord | null;
-  bestAverageRank: AwardRecord | null;
-  worstAverageRank: AwardRecord | null;
-  highestJansoFee: AwardRecord | null;
-  lowestJansoFee: AwardRecord | null;
-  mostGames: AwardRecord | null;
+  highestScore: AwardRecord[];
+  lowestScore: AwardRecord[];
+  maxPayment: AwardRecord[];
+  minPayment: AwardRecord[];
+  bestAverageRank: AwardRecord[];
+  worstAverageRank: AwardRecord[];
+  highestJansoFee: AwardRecord[];
+  lowestJansoFee: AwardRecord[];
+  mostGames: AwardRecord[];
 }
 
 interface PlayerStat {
@@ -64,15 +64,15 @@ const PlayerStats: React.FC = () => {
       });
 
       const awards: Awards = {
-        highestScore: null,
-        lowestScore: null,
-        maxPayment: null,
-        minPayment: null,
-        bestAverageRank: null,
-        worstAverageRank: null,
-        highestJansoFee: null,
-        lowestJansoFee: null,
-        mostGames: null,
+        highestScore: [],
+        lowestScore: [],
+        maxPayment: [],
+        minPayment: [],
+        bestAverageRank: [],
+        worstAverageRank: [],
+        highestJansoFee: [],
+        lowestJansoFee: [],
+        mostGames: [],
       };
 
       const calculatedStats = allRecords.reduce((acc, record) => {
@@ -84,11 +84,17 @@ const PlayerStats: React.FC = () => {
             if (player) {
               const numericScore = Number(score);
               if (!isNaN(numericScore)) {
-                if (!awards.highestScore || numericScore > awards.highestScore.value) {
-                  awards.highestScore = { value: numericScore, player: player.name, date: record.date };
+                const newRecord = { value: numericScore, player: player.name, date: record.date };
+                if (awards.highestScore.length === 0 || numericScore > awards.highestScore[0].value) {
+                  awards.highestScore = [newRecord];
+                } else if (numericScore === awards.highestScore[0].value) {
+                  awards.highestScore.push(newRecord);
                 }
-                if (!awards.lowestScore || numericScore < awards.lowestScore.value) {
-                  awards.lowestScore = { value: numericScore, player: player.name, date: record.date };
+
+                if (awards.lowestScore.length === 0 || numericScore < awards.lowestScore[0].value) {
+                  awards.lowestScore = [newRecord];
+                } else if (numericScore === awards.lowestScore[0].value) {
+                  awards.lowestScore.push(newRecord);
                 }
               }
             }
@@ -98,37 +104,55 @@ const PlayerStats: React.FC = () => {
         // 最大/最低支払額 & 最高/最低平均順位
         record.players.forEach(player => {
           const payment = player.finalAmount ?? player.payment ?? 0;
-          if (!awards.maxPayment || payment > awards.maxPayment.value) {
-            awards.maxPayment = { value: payment, player: player.name, date: record.date };
+          const newPaymentRecord = { value: payment, player: player.name, date: record.date };
+          if (awards.maxPayment.length === 0 || payment > awards.maxPayment[0].value) {
+            awards.maxPayment = [newPaymentRecord];
+          } else if (payment === awards.maxPayment[0].value) {
+            awards.maxPayment.push(newPaymentRecord);
           }
-          if (!awards.minPayment || payment < awards.minPayment.value) {
-            awards.minPayment = { value: payment, player: player.name, date: record.date };
+          if (awards.minPayment.length === 0 || payment < awards.minPayment[0].value) {
+            awards.minPayment = [newPaymentRecord];
+          } else if (payment === awards.minPayment[0].value) {
+            awards.minPayment.push(newPaymentRecord);
           }
 
           const avgRank = player.averageRank;
           if (avgRank !== undefined) {
-            if (!awards.bestAverageRank || avgRank < awards.bestAverageRank.value) {
-              awards.bestAverageRank = { value: avgRank, player: player.name, date: record.date };
+            const newRankRecord = { value: avgRank, player: player.name, date: record.date };
+            if (awards.bestAverageRank.length === 0 || avgRank < awards.bestAverageRank[0].value) {
+              awards.bestAverageRank = [newRankRecord];
+            } else if (avgRank === awards.bestAverageRank[0].value) {
+              awards.bestAverageRank.push(newRankRecord);
             }
-            if (!awards.worstAverageRank || avgRank > awards.worstAverageRank.value) {
-              awards.worstAverageRank = { value: avgRank, player: player.name, date: record.date };
+            if (awards.worstAverageRank.length === 0 || avgRank > awards.worstAverageRank[0].value) {
+              awards.worstAverageRank = [newRankRecord];
+            } else if (avgRank === awards.worstAverageRank[0].value) {
+              awards.worstAverageRank.push(newRankRecord);
             }
           }
         });
 
         // 最高/最低雀荘料金
         if (record.totalAmount !== null && record.totalAmount !== undefined) {
-          if (!awards.highestJansoFee || record.totalAmount > awards.highestJansoFee.value) {
-            awards.highestJansoFee = { value: record.totalAmount, date: record.date };
+          const newJansoFeeRecord = { value: record.totalAmount, date: record.date };
+          if (awards.highestJansoFee.length === 0 || record.totalAmount > awards.highestJansoFee[0].value) {
+            awards.highestJansoFee = [newJansoFeeRecord];
+          } else if (record.totalAmount === awards.highestJansoFee[0].value) {
+            awards.highestJansoFee.push(newJansoFeeRecord);
           }
-          if (!awards.lowestJansoFee || record.totalAmount < awards.lowestJansoFee.value) {
-            awards.lowestJansoFee = { value: record.totalAmount, date: record.date };
+          if (awards.lowestJansoFee.length === 0 || record.totalAmount < awards.lowestJansoFee[0].value) {
+            awards.lowestJansoFee = [newJansoFeeRecord];
+          } else if (record.totalAmount === awards.lowestJansoFee[0].value) {
+            awards.lowestJansoFee.push(newJansoFeeRecord);
           }
         }
 
         // 最高半荘数
-        if (!awards.mostGames || record.gameCount > awards.mostGames.value) {
-          awards.mostGames = { value: record.gameCount, date: record.date };
+        const newMostGamesRecord = { value: record.gameCount, date: record.date };
+        if (awards.mostGames.length === 0 || record.gameCount > awards.mostGames[0].value) {
+          awards.mostGames = [newMostGamesRecord];
+        } else if (record.gameCount === awards.mostGames[0].value) {
+          awards.mostGames.push(newMostGamesRecord);
         }
 
         record.players.forEach(player => {
@@ -233,13 +257,18 @@ const PlayerStats: React.FC = () => {
     </div>;
   }
 
-  const AwardCard: React.FC<{ title: string; record: AwardRecord; formatValue: (value: number) => string; isRank?: boolean }> = ({ title, record, formatValue, isRank = false }) => {
+  const AwardCard: React.FC<{ title: string; records: AwardRecord[]; formatValue: (value: number) => string; }> = ({ title, records, formatValue }) => {
+    if (records.length === 0) return null;
     return (
       <div className="award-card">
         <h4>{title}</h4>
-        <p className="award-value">{formatValue(record.value)}</p>
-        <p className="award-player">{record.player || '-'}</p>
-        <p className="award-date">{record.date.toLocaleDateString('ja-JP')}</p>
+        <p className="award-value">{formatValue(records[0].value)}</p>
+        {records.map((record, index) => (
+          <div key={`${record.date.getTime()}-${record.player}-${index}`}>
+            <p className="award-player">{record.player || '-'}</p>
+            <p className="award-date">{record.date.toLocaleDateString('ja-JP')}</p>
+          </div>
+        ))}
       </div>
     );
   };
@@ -276,15 +305,15 @@ const PlayerStats: React.FC = () => {
       <div className="awards-container">
         <h2>これまでの記録</h2>
         <div className="awards-grid">
-          {awards?.highestScore && <AwardCard title="最高得点" record={awards.highestScore} formatValue={(v) => `${v.toLocaleString()}点`} />}
-          {awards?.lowestScore && <AwardCard title="最低得点" record={awards.lowestScore} formatValue={(v) => `${v.toLocaleString()}点`} />}
-          {awards?.maxPayment && <AwardCard title="最大支払額" record={awards.maxPayment} formatValue={(v) => `${v.toLocaleString()}円`} />}
-          {awards?.minPayment && <AwardCard title="最低支払額" record={awards.minPayment} formatValue={(v) => `${v.toLocaleString()}円`} />}
-          {awards?.bestAverageRank && <AwardCard title="最高平均順位" record={awards.bestAverageRank} formatValue={(v) => `${v.toFixed(2)}位`} isRank />}
-          {awards?.worstAverageRank && <AwardCard title="最低平均順位" record={awards.worstAverageRank} formatValue={(v) => `${v.toFixed(2)}位`} isRank />}
-          {awards?.highestJansoFee && <AwardCard title="最高雀荘料金" record={awards.highestJansoFee} formatValue={(v) => `${v.toLocaleString()}円`} />}
-          {awards?.lowestJansoFee && <AwardCard title="最低雀荘料金" record={awards.lowestJansoFee} formatValue={(v) => `${v.toLocaleString()}円`} />}
-          {awards?.mostGames && <AwardCard title="最高半荘数" record={awards.mostGames} formatValue={(v) => `${v}半荘`} />}
+          {awards?.highestScore && awards.highestScore.length > 0 && <AwardCard title="最高得点" records={awards.highestScore} formatValue={(v) => `${v.toLocaleString()}点`} />}
+          {awards?.lowestScore && awards.lowestScore.length > 0 && <AwardCard title="最低得点" records={awards.lowestScore} formatValue={(v) => `${v.toLocaleString()}点`} />}
+          {awards?.maxPayment && awards.maxPayment.length > 0 && <AwardCard title="最大支払額" records={awards.maxPayment} formatValue={(v) => `${v.toLocaleString()}円`} />}
+          {awards?.minPayment && awards.minPayment.length > 0 && <AwardCard title="最低支払額" records={awards.minPayment} formatValue={(v) => `${v.toLocaleString()}円`} />}
+          {awards?.bestAverageRank && awards.bestAverageRank.length > 0 && <AwardCard title="最高平均順位" records={awards.bestAverageRank} formatValue={(v) => `${v.toFixed(2)}位`} />}
+          {awards?.worstAverageRank && awards.worstAverageRank.length > 0 && <AwardCard title="最低平均順位" records={awards.worstAverageRank} formatValue={(v) => `${v.toFixed(2)}位`} />}
+          {awards?.highestJansoFee && awards.highestJansoFee.length > 0 && <AwardCard title="最高雀荘料金" records={awards.highestJansoFee} formatValue={(v) => `${v.toLocaleString()}円`} />}
+          {awards?.lowestJansoFee && awards.lowestJansoFee.length > 0 && <AwardCard title="最低雀荘料金" records={awards.lowestJansoFee} formatValue={(v) => `${v.toLocaleString()}円`} />}
+          {awards?.mostGames && awards.mostGames.length > 0 && <AwardCard title="最高半荘数" records={awards.mostGames} formatValue={(v) => `${v}半荘`} />}
         </div>
       </div>
     </div>
