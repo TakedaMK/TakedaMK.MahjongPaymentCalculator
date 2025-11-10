@@ -88,12 +88,13 @@ const History: React.FC = () => {
           <div className="players-result">
             <h4>最終結果</h4>
             {[...record.players]
-              .sort((a, b) => a.finalAmount - b.finalAmount)
+              .sort((a, b) => ((a.finalAmount ?? a.payment) ?? 0) - ((b.finalAmount ?? b.payment) ?? 0))
               .map((player, index) => (
                 <div key={index} className="player-result">
                   <span>{player.name}</span>
-                  <span>{player.finalAmount.toLocaleString()}円</span>
-                  <span>平均順位: {player.averageRank.toFixed(2)}</span>
+                  <span>{((player.finalAmount ?? player.payment) ?? 0).toLocaleString()}円</span>
+                  <span>最終pt: {player.finalPoint != null ? player.finalPoint.toFixed(1) : '不明'}</span>
+                  <span>平均順位: {(player.averageRank ?? 0).toFixed(2)}</span>
                 </div>
               ))}
           </div>
@@ -108,6 +109,7 @@ const History: React.FC = () => {
                     {/* 順位ごとにプレイヤーを表示 */}
                     {[1, 2, 3, 4].map(rank => {
                       let playerName = '不明';
+                      let playerScore = '';
 
                       // 新しいデータ構造（playerRanks）がある場合はそれを使用
                       if (game.playerRanks) {
@@ -120,6 +122,9 @@ const History: React.FC = () => {
                         const playerIndex = game.ranks.indexOf(rank);
                         if (playerIndex >= 0 && record.players[playerIndex]) {
                           playerName = record.players[playerIndex].name;
+                          if (game.scores && game.scores[playerIndex] !== undefined) {
+                            playerScore = `${Number(game.scores[playerIndex]).toLocaleString()}点`;
+                          }
                         }
                       }
 
@@ -127,11 +132,28 @@ const History: React.FC = () => {
                         <div key={rank} className="rank-item">
                           <span className={`rank-number rank-${rank}`}>{rank}位</span>
                           <span className="player-name">{playerName}</span>
+                          {playerScore && <span className="player-score">{playerScore}</span>}
                         </div>
                       );
                     })}
                   </div>
-                  {game.isFlying && <span className="flying-badge">トビ有り</span>}
+                  {game.yakuman && (
+                    <div className="yakuman-badge">
+                      役満: {game.yakuman.playerName} - {game.yakuman.yakumanName}
+                    </div>
+                  )}
+                  {(Array.isArray(game.isFlying) && game.isFlying.some(f => f)) || (typeof game.isFlying === 'boolean' && game.isFlying) ? (
+                    <div className="flying-badge">
+                      トビ: {
+                        Array.isArray(game.isFlying)
+                          ? record.players
+                            .filter((_, playerIndex) => game.isFlying[playerIndex])
+                            .map(p => p.name)
+                            .join(', ')
+                          : '有り'
+                      }
+                    </div>
+                  ) : null}
                 </div>
               ))}
             </div>

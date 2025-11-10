@@ -33,8 +33,10 @@ export interface GameRecord {
   gameCount: number;
   players: {
     name: string;
-    finalAmount: number;
-    averageRank: number;
+    payment?: number;
+    finalAmount?: number; // for backward compatibility
+    averageRank?: number;
+    finalPoint?: number;
   }[];
   games: {
     gameNumber: number;
@@ -44,7 +46,12 @@ export interface GameRecord {
       playerName: string;
       rank: number;
     }[];
-    isFlying: boolean;
+    isFlying: boolean[];
+    scores?: string[];
+    yakuman?: {
+      playerName: string;
+      yakumanName:string;
+    }
   }[];
 }
 
