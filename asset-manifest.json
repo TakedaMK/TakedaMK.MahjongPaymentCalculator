@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/TakedaMK.MahjongPaymentCalculator/static/css/main.95daa622.css",
-    "main.js": "/TakedaMK.MahjongPaymentCalculator/static/js/main.75971591.js",
+    "main.js": "/TakedaMK.MahjongPaymentCalculator/static/js/main.e435cc29.js",
     "static/js/453.86899728.chunk.js": "/TakedaMK.MahjongPaymentCalculator/static/js/453.86899728.chunk.js",
     "index.html": "/TakedaMK.MahjongPaymentCalculator/index.html",
     "main.95daa622.css.map": "/TakedaMK.MahjongPaymentCalculator/static/css/main.95daa622.css.map",
-    "main.75971591.js.map": "/TakedaMK.MahjongPaymentCalculator/static/js/main.75971591.js.map",
+    "main.e435cc29.js.map": "/TakedaMK.MahjongPaymentCalculator/static/js/main.e435cc29.js.map",
     "453.86899728.chunk.js.map": "/TakedaMK.MahjongPaymentCalculator/static/js/453.86899728.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.95daa622.css",
-    "static/js/main.75971591.js"
+    "static/js/main.e435cc29.js"
   ]
 }
