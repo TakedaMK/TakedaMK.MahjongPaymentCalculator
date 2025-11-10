@@ -56,6 +56,21 @@ const Calculator: React.FC = () => {
   // 実力反映率 γ（0〜1）。例: 0.3 = 総額の30%を成績で動かす
   const [gamma, setGamma] = useState<number>(0.3);
 
+  // レスポンシブ対応：画面幅に応じてグリッド列数を変更
+  const [isNarrowScreen, setIsNarrowScreen] = useState<boolean>(false);
+
+  // 画面幅の監視
+  useEffect(() => {
+    const checkScreenWidth = () => {
+      setIsNarrowScreen(window.innerWidth < 600); // 600px未満で縦並び
+    };
+
+    checkScreenWidth(); // 初期チェック
+    window.addEventListener('resize', checkScreenWidth);
+
+    return () => window.removeEventListener('resize', checkScreenWidth);
+  }, []);
+
   // 計算結果を保存用に持っておく
   const [tempResults, setTempResults] = useState<{
     results: string;
@@ -267,6 +282,21 @@ const Calculator: React.FC = () => {
     // 最後に一回だけ会計
     const finalAmounts = settleOnceAtEnd(final, totalAmount, gamma);
 
+    // 保存用に構造化
+    const gamesWithDetails = gameResults.map((g, idx) => ({
+      gameNumber: idx + 1,
+      ranks: g.ranks,
+      scores: g.scores,
+      isFlying: g.isFlying,
+      points: perGame[idx], // この半荘での4人のポイント
+      yakuman: g.yakuman.playerIndex !== null && g.yakuman.yakumanName
+        ? {
+            playerName: players[g.yakuman.playerIndex].name,
+            yakumanName: g.yakuman.yakumanName,
+          }
+        : null,
+    }));
+
     // 表示用：成績順に表示するか、プレイヤー配列順で表示するかはお好みで
     // ここではプレイヤー配列順
     let results = `${gameCount}半荘の合計結果（γ率: ${(gamma * 100).toFixed(0)}%）\n\n`;
@@ -287,6 +317,22 @@ const Calculator: React.FC = () => {
     });
     results += '\n';
 
+    // 各半荘の詳細を表示
+    results += '【各半荘の結果】\n';
+    gamesWithDetails.forEach((game, gameIdx) => {
+      results += `第${game.gameNumber}半荘:\n`;
+      players.forEach((p, i) => {
+        const score = parseInt(game.scores[i], 10);
+        const rank = game.ranks[i];
+        const point = game.points[i];
+        results += `  ${p.name}: ${score.toLocaleString()}点 (${rank}位) → ${point >= 0 ? '+' : ''}${point.toFixed(1)}pt\n`;
+      });
+      if (game.yakuman) {
+        results += `  ※役満: ${game.yakuman.playerName} (${game.yakuman.yakumanName})\n`;
+      }
+      results += '\n';
+    });
+
     // 補足情報を表示
     results += '--- 補足情報 ---\n';
     players.forEach((p, i) => {
@@ -301,21 +347,6 @@ const Calculator: React.FC = () => {
     if (totalPaid !== totalAmount) {
       results += `\n※丸め調整のため合計 ${totalPaid.toLocaleString()} 円（卓代 ${totalAmount.toLocaleString()} 円と ±${totalPaid - totalAmount} 円の誤差）\n`;
     }
-
-    // 保存用に構造化
-    const gamesWithDetails = gameResults.map((g, idx) => ({
-      gameNumber: idx + 1,
-      ranks: g.ranks,
-      scores: g.scores,
-      isFlying: g.isFlying,
-      points: perGame[idx], // この半荘での4人のポイント
-      yakuman: g.yakuman.playerIndex !== null && g.yakuman.yakumanName
-        ? {
-            playerName: players[g.yakuman.playerIndex].name,
-            yakumanName: g.yakuman.yakumanName,
-          }
-        : null,
-    }));
 
     setCalculationResult(results);
     setTempResults({
@@ -479,7 +510,12 @@ const Calculator: React.FC = () => {
             <h3>第{gameIndex + 1}半荘</h3>
 
             {/* スコア入力 */}
-            <div className="player-scores" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 16px', marginBottom: 12 }}>
+            <div className="player-scores" style={{
+              display: 'grid',
+              gridTemplateColumns: isNarrowScreen ? '1fr' : '1fr 1fr',
+              gap: '8px 16px',
+              marginBottom: 12
+            }}>
               {players.map((player, playerIndex) => (
                 <div key={`score_${player.id}`} className="score-input-group">
                   <label htmlFor={`score${player.id}_${gameIndex + 1}`}>
