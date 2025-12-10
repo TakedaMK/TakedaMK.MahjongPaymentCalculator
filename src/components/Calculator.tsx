@@ -54,7 +54,7 @@ const Calculator: React.FC = () => {
   );
 
   // 実力反映率 γ（0〜1）。例: 0.3 = 総額の30%を成績で動かす
-  const [gamma, setGamma] = useState<number>(0.3);
+  const [gamma, setGamma] = useState<number>(0.2);
 
   // レスポンシブ対応：画面幅に応じてグリッド列数を変更
   const [isNarrowScreen, setIsNarrowScreen] = useState<boolean>(false);
@@ -80,14 +80,14 @@ const Calculator: React.FC = () => {
     gamesWithDetails: any[];
   } | null>(null);
 
-  // 半荘数が変わったら初期値を用意（順位=1,2,3,4 / スコア=25,000 / トビ=false）
+  // 半荘数が変わったら初期値を用意（順位=1,2,3,4 / スコア=空値 / 役満=null）
   useEffect(() => {
     const initialResults: GameResult[] = Array(gameCount)
       .fill(null)
       .map(() => ({
         ranks: [1, 2, 3, 4],
         isFlying: [false, false, false, false],
-        scores: ['25000', '25000', '25000', '25000'],
+        scores: ['', '', '', ''],
         yakuman: { playerIndex: null, yakumanName: '' },
       }));
     setGameResults(initialResults);
@@ -523,11 +523,12 @@ const Calculator: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    inputMode="numeric"
+                    inputMode="text"
+                    pattern="-?[0-9]*"
                     id={`score${player.id}_${gameIndex + 1}`}
                     value={game.scores[playerIndex]}
                     onChange={(e) => handleScoreChange(gameIndex, playerIndex, e.target.value)}
-                    placeholder="例: 35000"
+                    placeholder="例: 25000"
                     className="no-spin"
                   />
                 </div>
